@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -43,12 +43,26 @@ const SLIDES: Slide[] = [
 
 export default function HeroSection() {
   const [bookingOpen, setBookingOpen] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, duration: 40 }, [
     Autoplay({ delay: 6000, stopOnInteraction: false }),
   ]);
 
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    onSelect();
+    emblaApi.on("select", onSelect);
+    emblaApi.on("reInit", onSelect);
+  }, [emblaApi, onSelect]);
+
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
+  const scrollTo = useCallback((index: number) => emblaApi?.scrollTo(index), [emblaApi]);
 
   return (
     <section className="relative -mt-[72px] md:-mt-[90px] h-[85vh] min-h-[700px] bg-[#0B1C2D] overflow-hidden">
@@ -118,26 +132,68 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* Navigation Indicators & Prev/Next */}
-      <div className="absolute top-1/2 -translate-y-1/2 left-6 md:left-12 z-30">
-        <button
-          type="button"
-          onClick={scrollPrev}
-          className="size-14 md:size-16 rounded-full border border-white/10 bg-white/5 backdrop-blur-md flex items-center justify-center text-white hover:bg-[#0D9488] hover:border-[#0D9488] transition-all duration-500 shadow-2xl"
-          aria-label="Previous slide"
-        >
-          <ChevronLeft className="size-6" />
-        </button>
+      {/* Navigation Arrows & Dots */}
+      <div className="absolute inset-x-0 bottom-12 z-30 pointer-events-none">
+        <div className="container max-w-7xl mx-auto px-6 md:px-12 flex flex-col items-center gap-8">
+          
+          {/* Bottom Controls Group */}
+          <div className="flex items-center gap-10 pointer-events-auto">
+            {/* Arrows */}
+            <div className="flex items-center gap-4">
+              <button
+                type="button"
+                onClick={scrollPrev}
+                className="size-10 md:size-12 rounded-full bg-white/5 hover:bg-white text-white hover:text-[#0B1C2D] border border-white/10 transition-all duration-300 backdrop-blur-sm flex items-center justify-center group"
+                aria-label="Previous slide"
+              >
+                <ChevronLeft className="size-4 md:size-5 group-hover:-translate-x-0.5 transition-transform" />
+              </button>
+
+              {/* Dots */}
+              <div className="flex items-center gap-2.5">
+                {SLIDES.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => scrollTo(index)}
+                    className={`h-1.5 transition-all duration-500 rounded-full ${
+                      selectedIndex === index 
+                        ? "w-8 bg-[#0D9488]" 
+                        : "w-1.5 bg-white/20 hover:bg-white/40"
+                    }`}
+                    aria-label={`Go to slide ${index + 1}`}
+                  />
+                ))}
+              </div>
+
+              <button
+                type="button"
+                onClick={scrollNext}
+                className="size-10 md:size-12 rounded-full bg-white/5 hover:bg-white text-white hover:text-[#0B1C2D] border border-white/10 transition-all duration-300 backdrop-blur-sm flex items-center justify-center group"
+                aria-label="Next slide"
+              >
+                <ChevronRight className="size-4 md:size-5 group-hover:translate-x-0.5 transition-transform" />
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
-      <div className="absolute top-1/2 -translate-y-1/2 right-6 md:right-12 z-30">
-        <button
-          type="button"
-          onClick={scrollNext}
-          className="size-14 md:size-16 rounded-full border border-white/10 bg-white/5 backdrop-blur-md flex items-center justify-center text-white hover:bg-[#0D9488] hover:border-[#0D9488] transition-all duration-500 shadow-2xl"
-          aria-label="Next slide"
-        >
-          <ChevronRight className="size-6" />
-        </button>
+
+      {/* Desktop-only side arrows (very minimal) */}
+      <div className="hidden lg:block absolute inset-y-0 left-0 right-0 pointer-events-none z-30">
+        <div className="container max-w-[1400px] h-full mx-auto relative">
+          <button
+            onClick={scrollPrev}
+            className="absolute left-8 top-1/2 -translate-y-1/2 size-14 rounded-full text-white/20 hover:text-white hover:bg-white/5 transition-all duration-500 pointer-events-auto flex items-center justify-center group"
+          >
+            <ChevronLeft className="size-8 group-hover:-translate-x-2 transition-transform duration-500" />
+          </button>
+          <button
+            onClick={scrollNext}
+            className="absolute right-8 top-1/2 -translate-y-1/2 size-14 rounded-full text-white/20 hover:text-white hover:bg-white/5 transition-all duration-500 pointer-events-auto flex items-center justify-center group"
+          >
+            <ChevronRight className="size-8 group-hover:translate-x-2 transition-transform duration-500" />
+          </button>
+        </div>
       </div>
 
       <BookingModal open={bookingOpen} onOpenChange={setBookingOpen} />

@@ -52,7 +52,7 @@ export default function ServicesPage() {
         <div className="container max-w-7xl mx-auto px-6 md:px-12 relative z-10 pt-[72px] md:pt-[108px]">
           <div className="max-w-4xl">
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-montserrat font-black text-white leading-[1.1] mb-8 tracking-tight">
-              Expert <span className="text-[#0D9488] relative">
+              Expert <span className="text-[#0D9488] relative inline-block">
                 Eye Care
                 <span className="absolute bottom-2 left-0 w-full h-3 bg-[#0D9488]/20 -z-10" />
               </span> <br />

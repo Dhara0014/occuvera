@@ -45,7 +45,7 @@ export default function ServicesSection() {
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
           <div className="max-w-2xl">
             <h2 className="text-4xl md:text-6xl font-montserrat font-black text-[#0B1C2D] tracking-tighter mb-6 leading-tight">
-              Clinical <span className="text-[#0D9488] relative">
+              Clinical <span className="text-[#0D9488] relative inline-block">
                 Excellence.
                 <span className="absolute bottom-2 left-0 w-full h-3 bg-[#0D9488]/10 -z-10" />
               </span>

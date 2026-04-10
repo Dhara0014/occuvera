@@ -50,7 +50,7 @@ export default function FAQSection() {
             <div>
               <h2 className="text-3xl md:text-5xl font-montserrat font-black text-[#0B1C2D] tracking-tighter leading-[0.95] mb-6">
                 Common <br />
-                <span className="text-[#0D9488] relative">
+                <span className="text-[#0D9488] relative inline-block">
                   Questions.
                   <span className="absolute bottom-2 left-0 w-full h-3 bg-[#0D9488]/10 -z-10" />
                 </span>

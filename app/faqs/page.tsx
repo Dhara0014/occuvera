@@ -70,7 +70,7 @@ export default function FAQPage() {
         
         <div className="container max-w-7xl mx-auto px-6 md:px-12 relative z-10 text-center pt-[72px] md:pt-[108px]">
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-montserrat font-black text-white mb-10 tracking-tight">
-            How can we <span className="text-[#0D9488] relative">
+            How can we <span className="text-[#0D9488] relative inline-block">
               Help?
               <span className="absolute bottom-2 left-0 w-full h-3 bg-[#0D9488]/20 -z-10" />
             </span>
